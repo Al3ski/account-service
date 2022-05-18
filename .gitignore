@@ -10,6 +10,16 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# Mac OS specific
+.DS_Store
+
+# Intellij idea
+*.iml
+
+# Target
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
 # Package Files #
 *.jar
 *.war
