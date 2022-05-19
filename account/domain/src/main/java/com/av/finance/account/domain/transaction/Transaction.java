@@ -7,11 +7,11 @@ import java.util.UUID;
 
 public class Transaction {
 
-    private UUID txId;
-    private UUID accountId;
-    private String details;
-    private TransactionType txType;
-    private BigDecimal amount;
+    private final UUID txId;
+    private final UUID accountId;
+    private final String details;
+    private final TransactionType txType;
+    private final BigDecimal amount;
 
     private Transaction(UUID txId, UUID accountId, TransactionType type, BigDecimal amount, String details) {
         if (txId == null) {
@@ -37,12 +37,32 @@ public class Transaction {
         this(builder.txId, builder.accountId, builder.txType, builder.amount, builder.details);
     }
 
-    public Transaction create(UUID accountId, TransactionType type, BigDecimal amount, String details) {
+    public static Transaction create(UUID accountId, TransactionType type, BigDecimal amount, String details) {
         return new Transaction(UUID.randomUUID(), accountId, type, amount, details);
     }
 
     public static TransactionBuilder builder() {
         return new TransactionBuilder();
+    }
+
+    public UUID getTxId() {
+        return txId;
+    }
+
+    public UUID getAccountId() {
+        return accountId;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public TransactionType getTxType() {
+        return txType;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
     }
 
     @Override

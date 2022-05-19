@@ -7,10 +7,10 @@ import java.util.UUID;
 
 public class CustomerAccount {
 
-    private UUID accountId;
-    private UUID customerId;
-    private CustomerAccountType accountType;
-    private BigDecimal balance;
+    private final UUID accountId;
+    private final UUID customerId;
+    private final CustomerAccountType accountType;
+    private final BigDecimal balance;
 
     private CustomerAccount(UUID accountId, UUID customerId, CustomerAccountType accountType, BigDecimal balance) {
         if (accountId == null) {
@@ -35,12 +35,28 @@ public class CustomerAccount {
         this(builder.accountId, builder.customerId, builder.accountType, builder.balance);
     }
 
-    public CustomerAccount open(UUID customerId, CustomerAccountType accountType, BigDecimal initialCredit) {
+    public static CustomerAccount open(UUID customerId, CustomerAccountType accountType, BigDecimal initialCredit) {
         return new CustomerAccount(UUID.randomUUID(), customerId, accountType, initialCredit);
     }
 
     public static CustomerAccountBuilder builder() {
         return new CustomerAccountBuilder();
+    }
+
+    public UUID getAccountId() {
+        return accountId;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public CustomerAccountType getAccountType() {
+        return accountType;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
     }
 
     @Override
