@@ -8,11 +8,11 @@ import java.util.UUID;
 
 public class Customer {
 
-    final UUID customerId;
-    final String name;
-    final String surname;
+    private final UUID customerId;
+    private final String name;
+    private final String surname;
 
-    public Customer(UUID customerId, String name, String surname) {
+    private Customer(UUID customerId, String name, String surname) {
         if (customerId == null) {
             throw new CustomerValidationError("Customer id can't be null");
         }
@@ -25,6 +25,26 @@ public class Customer {
         this.customerId = customerId;
         this.name = name;
         this.surname = surname;
+    }
+
+    Customer(CustomerBuilder builder) {
+        this(builder.customerId, builder.name, builder.surname);
+    }
+
+    public static CustomerBuilder builder() {
+        return new CustomerBuilder();
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
     }
 
     @Override

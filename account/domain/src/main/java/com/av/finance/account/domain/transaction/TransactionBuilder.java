@@ -36,7 +36,7 @@ class TransactionBuilder {
         return this;
     }
 
-    public Transaction builder() {
+    public Transaction build() {
         return new Transaction(this);
     }
 }
