@@ -16,8 +16,17 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>common</module>
         <module>application</module>
         <module>domain</module>
         <module>infrastructure</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+    </dependencies>
 </project>
