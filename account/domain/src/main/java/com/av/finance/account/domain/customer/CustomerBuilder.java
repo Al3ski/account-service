@@ -2,7 +2,7 @@ package com.av.finance.account.domain.customer;
 
 import java.util.UUID;
 
-class CustomerBuilder {
+public class CustomerBuilder {
 
     UUID customerId;
     String name;
