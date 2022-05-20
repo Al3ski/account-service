@@ -17,7 +17,7 @@ public class CustomerAccount {
             throw new CustomerAccountValidationError("Customer account id can't be null");
         }
         if (customerId == null) {
-            throw new CustomerAccountValidationError("Customer must be provided");
+            throw new CustomerAccountValidationError("Customer id can't be null");
         }
         if (accountType == null) {
             throw new CustomerAccountValidationError("Customer account type required");
