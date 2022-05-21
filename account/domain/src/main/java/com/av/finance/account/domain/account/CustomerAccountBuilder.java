@@ -3,7 +3,7 @@ package com.av.finance.account.domain.account;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-class CustomerAccountBuilder {
+public class CustomerAccountBuilder {
 
     UUID accountId;
     UUID customerId;

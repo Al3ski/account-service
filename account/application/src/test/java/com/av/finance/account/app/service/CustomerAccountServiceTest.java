@@ -5,6 +5,7 @@ import com.av.finance.account.domain.account.CustomerAccount;
 import com.av.finance.account.domain.account.repository.CustomerAccountRepository;
 import com.av.finance.account.domain.customer.Customer;
 import com.av.finance.account.domain.customer.repository.CustomerRepository;
+import com.av.finance.account.domain.transaction.TransactionType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,8 @@ class CustomerAccountServiceTest {
     private CustomerAccountService customerAccountService;
 
     @MockBean
+    private TransactionService transactionService;
+    @MockBean
     private CustomerRepository customerRepository;
     @MockBean
     private CustomerAccountRepository customerAccountRepository;
@@ -39,6 +42,8 @@ class CustomerAccountServiceTest {
 
         final Customer customer = prepareCustomer(customerId);
 
+        Mockito.when(transactionService.createTransaction(any(UUID.class), any(TransactionType.class),
+                any(BigDecimal.class), any(String.class))).thenReturn(any(UUID.class));
         Mockito.when(customerRepository.retrieve(customerId)).thenReturn(customer);
         Mockito.doNothing().when(customerAccountRepository).save(any(CustomerAccount.class));
 
