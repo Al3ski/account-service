@@ -17,8 +17,9 @@
 
     <modules>
         <module>common</module>
-        <module>application</module>
         <module>domain</module>
+        <module>application</module>
+        <module>web</module>
         <module>infrastructure</module>
     </modules>
 
