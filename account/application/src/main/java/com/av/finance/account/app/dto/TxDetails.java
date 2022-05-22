@@ -1,20 +1,23 @@
 package com.av.finance.account.app.dto;
 
 import com.av.finance.account.domain.transaction.TransactionType;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Value;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Getter
-@ToString
-@RequiredArgsConstructor
+@Value
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class TxDetails {
 
-    private final UUID accountId;
-    private final TransactionType txType;
-    private final BigDecimal amount;
-    private final String details;
+    UUID txId;
+
+    UUID accountId;
+
+    TransactionType txType;
+
+    BigDecimal amount;
+
+    String details;
 }

@@ -37,6 +37,14 @@ public class CustomerAccountRepositoryImpl implements CustomerAccountRepository 
     }
 
     @Override
+    public List<CustomerAccount> retrieveByCustomers(Iterable<UUID> customerIds) {
+        final List<CustomerAccountEntity> entities = customerAccountDao.findAllByCustomerIdIn(customerIds);
+        final List<CustomerAccount> customerAccounts = mapper.toCustomerAccounts(entities);
+        log.debug("Found customer accounts: {} for customers: {}", customerAccounts, customerIds);
+        return customerAccounts;
+    }
+
+    @Override
     public void save(CustomerAccount customerAccount) {
         customerAccountDao.save(mapper.toEntity(customerAccount));
         log.debug("Customer account: {} successfully created", customerAccount.getAccountId());

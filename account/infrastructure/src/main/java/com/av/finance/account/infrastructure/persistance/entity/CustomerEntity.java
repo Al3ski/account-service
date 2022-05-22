@@ -25,14 +25,14 @@ public class CustomerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "CUSTOMER_ID", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     @ColumnDefault("random_uuid()")
     @Type(type = "uuid-char")
     private UUID customerId;
 
-    @Column(name = "NAME")
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "SURNAME")
+    @Column(nullable = false)
     private String surname;
 }

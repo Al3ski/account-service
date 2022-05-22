@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface CustomerAccountDao extends CrudRepository<CustomerAccountEntity, UUID> {
 
     List<CustomerAccountEntity> findAllByCustomerId(UUID customerId);
+
+    List<CustomerAccountEntity> findAllByCustomerIdIn(Iterable<UUID> customerIds);
 }
