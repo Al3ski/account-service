@@ -9,7 +9,9 @@ public interface CustomerAccountRepository {
 
     CustomerAccount retrieve(UUID accountId);
 
-    List<CustomerAccount> retrieveByCustomer(UUID customerID);
+    List<CustomerAccount> retrieveByCustomer(UUID customerId);
+
+    List<CustomerAccount> retrieveByCustomers(Iterable<UUID> customerIds);
 
     void save(CustomerAccount customerAccount);
 }

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Value
-public class AccountDetails {
+public class AccountInput {
 
     @NotNull
     UUID customerId;

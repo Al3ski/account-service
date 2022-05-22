@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +32,13 @@ class TransactionServiceTest {
 
     @Test
     void createTransaction_success() {
-        Mockito.when(restClient.postRetryable(any(String.class), any(HttpEntity.class), any(Class.class)))
+        Mockito.when(restClient.postRetryable(any(String.class), any(HttpEntity.class), any(ParameterizedTypeReference.class)))
                 .thenReturn(ResponseEntity.status(HttpStatus.CREATED).build());
 
         transactionService.createTransaction(UUID.randomUUID(), TransactionType.INITIAL,
                 BigDecimal.ZERO, "");
 
         Mockito.verify(restClient, times(1))
-                .postRetryable(any(String.class), any(HttpEntity.class), any(Class.class));
+                .postRetryable(any(String.class), any(HttpEntity.class), any(ParameterizedTypeReference.class));
     }
 }

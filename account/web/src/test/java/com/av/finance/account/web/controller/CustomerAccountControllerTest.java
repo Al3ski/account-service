@@ -2,7 +2,7 @@ package com.av.finance.account.web.controller;
 
 import com.av.finance.account.app.service.CustomerAccountService;
 import com.av.finance.account.domain.account.CustomerAccountType;
-import com.av.finance.account.web.dto.AccountDetails;
+import com.av.finance.account.web.dto.AccountInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -38,22 +38,22 @@ class CustomerAccountControllerTest {
 
     @Test
     void openCurrentAccountRequest_returnOk() throws Exception {
-        final AccountDetails accountDetails = new AccountDetails(
+        final AccountInput accountInput = new AccountInput(
                 UUID.randomUUID(),
                 CustomerAccountType.CURRENT,
                 BigDecimal.ZERO
         );
 
         Mockito.when(customerAccountService.openAccount(any(UUID.class), any(CustomerAccountType.class),
-                any(BigDecimal.class))).thenReturn(accountDetails.getCustomerId());
+                any(BigDecimal.class))).thenReturn(accountInput.getCustomerId());
 
         mockMvc.perform(
                 post("/v1/accounts")
-                        .content(objectMapper.writeValueAsString(accountDetails))
+                        .content(objectMapper.writeValueAsString(accountInput))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(header().string(LOCATION, containsString("/v1/accounts/" + accountDetails.getCustomerId())));
+                .andExpect(header().string(LOCATION, containsString("/v1/accounts/" + accountInput.getCustomerId())));
     }
 
 

@@ -1,5 +1,7 @@
 package com.av.finance.account.app.service.impl;
 
+import com.av.finance.account.app.dto.AccountDetails;
+import com.av.finance.account.app.dto.TxDetails;
 import com.av.finance.account.app.service.CustomerAccountService;
 import com.av.finance.account.app.service.CustomerNotFoundException;
 import com.av.finance.account.app.service.TransactionService;
@@ -10,13 +12,25 @@ import com.av.finance.account.domain.customer.Customer;
 import com.av.finance.account.domain.customer.repository.CustomerRepository;
 import com.av.finance.account.domain.transaction.TransactionType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CustomerAccountServiceImpl implements CustomerAccountService {
@@ -25,6 +39,30 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
     private final CustomerRepository customerRepository;
     private final CustomerAccountRepository customerAccountRepository;
+
+    @Override
+    public List<AccountDetails> getCustomerAccountsDetails(UUID customerId) {
+        final List<Customer> customers = customerId == null ?
+                customerRepository.findAll() : Collections.singletonList(customerRepository.retrieve(customerId));
+
+        final Map<UUID, Customer> idToCustomer = customers.stream().collect(toMap(Customer::getCustomerId, Function.identity()));
+        final List<CustomerAccount> accounts = customerAccountRepository.retrieveByCustomers(idToCustomer.keySet());
+
+        final List<UUID> accountIds = toIds(accounts, CustomerAccount::getAccountId);
+        final Map<UUID, List<TxDetails>> accountTxs = transactionService.getTransactionsForAccounts(accountIds)
+                .stream()
+                .collect(groupingBy(TxDetails::getAccountId));
+
+        return accounts.stream()
+                .map(account -> AccountDetails.builder()
+                        .accountId(account.getAccountId())
+                        .name(idToCustomer.get(account.getCustomerId()).getName())
+                        .surname(idToCustomer.get(account.getCustomerId()).getSurname())
+                        .balance(account.getBalance())
+                        .accountTransactions(accountTxs.get(account.getAccountId()))
+                        .build())
+                .collect(toList());
+    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
@@ -38,10 +76,17 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         customerAccountRepository.save(customerAccount);
 
         if (BigDecimal.ZERO.compareTo(initialCredit) < 0) {
-            transactionService.createTransaction(
-                    customerAccount.getAccountId(), TransactionType.INITIAL, initialCredit, "");
+            transactionService.createTransaction(customerAccount.getAccountId(), TransactionType.INITIAL,
+                    initialCredit, "Initial credit request");
         }
 
         return customerAccount.getAccountId();
+    }
+
+    private <T> List<UUID> toIds(Iterable<T> source, Function<T, UUID> converter) {
+        return StreamSupport.stream(source.spliterator(), false)
+                .filter(Objects::nonNull)
+                .map(converter)
+                .collect(toList());
     }
 }
