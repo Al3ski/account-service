@@ -11,6 +11,8 @@ import com.av.finance.account.domain.customer.repository.CustomerRepository;
 import com.av.finance.account.domain.transaction.TransactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -24,6 +26,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
     private final CustomerRepository customerRepository;
     private final CustomerAccountRepository customerAccountRepository;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public UUID openAccount(UUID customerId, CustomerAccountType accountType, BigDecimal initialCredit) {
         final Customer customer = customerRepository.retrieve(customerId);

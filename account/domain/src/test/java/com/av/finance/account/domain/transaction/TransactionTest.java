@@ -11,23 +11,6 @@ import static com.av.finance.account.domain.transaction.TransactionType.INITIAL;
 public class TransactionTest {
 
     @Test
-    public void createTransaction_success() {
-        final UUID accountId = UUID.randomUUID();
-        final Transaction transaction = Transaction.create(accountId, INITIAL, BigDecimal.ZERO, "");
-
-        Assert.assertNotNull(transaction);
-        Assert.assertEquals(accountId, transaction.getAccountId());
-        Assert.assertEquals(INITIAL, transaction.getTxType());
-        Assert.assertEquals(BigDecimal.ZERO, transaction.getAmount());
-        Assert.assertEquals("", transaction.getDetails());
-    }
-
-    @Test(expected = TransactionValidationError.class)
-    public void createTransaction_fail() {
-        Transaction.create(UUID.randomUUID(), INITIAL, null, "");
-    }
-
-    @Test
     public void buildTransaction_success() {
         final UUID txId = UUID.randomUUID();
         final UUID accountId = UUID.randomUUID();
