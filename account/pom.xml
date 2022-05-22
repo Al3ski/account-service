@@ -21,6 +21,7 @@
         <module>application</module>
         <module>web</module>
         <module>infrastructure</module>
+        <module>account-app</module>
     </modules>
 
     <dependencies>

@@ -1,39 +1,44 @@
 package com.av.finance.account.infrastructure.persistance.repository;
 
 import com.av.finance.account.domain.account.CustomerAccount;
-import com.av.finance.account.domain.account.CustomerAccountType;
 import com.av.finance.account.domain.account.repository.CustomerAccountRepository;
+import com.av.finance.account.infrastructure.persistance.dao.CustomerAccountDao;
+import com.av.finance.account.infrastructure.persistance.entity.CustomerAccountEntity;
+import com.av.finance.account.infrastructure.persistance.mapper.CustomerAccountMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Slf4j
 @Component
 public class CustomerAccountRepositoryImpl implements CustomerAccountRepository {
 
+    private final CustomerAccountDao customerAccountDao;
+    private final CustomerAccountMapper mapper;
+
     @Override
     public CustomerAccount retrieve(UUID accountId) {
-        log.info("Found customer account with id: {}", accountId);
-        return CustomerAccount.builder()
-                .customerId(UUID.randomUUID())
-                .accountId(accountId)
-                .accountType(CustomerAccountType.CURRENT)
-                .balance(BigDecimal.ZERO)
-                .build();
+        final CustomerAccountEntity entity = customerAccountDao.findById(accountId).orElse(null);
+        final CustomerAccount customerAccount = mapper.toCustomerAccount(entity);
+        log.debug("Found customer account: {} for id: {}", customerAccount, accountId);
+        return customerAccount;
     }
 
     @Override
     public List<CustomerAccount> retrieveByCustomer(UUID customerId) {
-        log.info("Found customer accounts for customer: {}", customerId);
-        return new ArrayList<>();
+        final List<CustomerAccountEntity> entities = customerAccountDao.findAllByCustomerId(customerId);
+        final List<CustomerAccount> customerAccounts = mapper.toCustomerAccounts(entities);
+        log.debug("Found customer accounts: {} for customer: {}", customerAccounts, customerId);
+        return customerAccounts;
     }
 
     @Override
     public void save(CustomerAccount customerAccount) {
-        log.info("Customer account: {} successfully created", customerAccount.getAccountId());
+        customerAccountDao.save(mapper.toEntity(customerAccount));
+        log.debug("Customer account: {} successfully created", customerAccount.getAccountId());
     }
 }
