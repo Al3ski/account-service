@@ -18,7 +18,7 @@ public class AccountServiceApplication {
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder templateBuilder) {
-        return templateBuilder.rootUri("/")
+        return templateBuilder.rootUri("http://localhost:8092")
                 .setConnectTimeout(Duration.ofMillis(500L))
                 .setReadTimeout(Duration.ofMillis(1000L))
                 .build();
@@ -27,7 +27,7 @@ public class AccountServiceApplication {
     @Bean
     public RetryTemplate retryTemplate() {
         return RetryTemplate.builder()
-                .withinMillis(1000L)
+                .withinMillis(4000L)
                 .fixedBackoff(1000L)
                 .build();
     }

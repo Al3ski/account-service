@@ -17,7 +17,7 @@ import java.util.UUID;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private final String transactionUrl = "http://localhost:8092/v1/transactions";
+    private final String transactionUrl = "/v1/transactions";
 
     private final RestClient restClient;
 

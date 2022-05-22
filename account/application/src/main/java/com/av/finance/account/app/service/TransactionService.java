@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface TransactionService {
 
-    void createTransaction(UUID customerId, TransactionType type, BigDecimal initialCredit, String details);
+    void createTransaction(UUID accountId, TransactionType type, BigDecimal initialCredit, String details);
 }
