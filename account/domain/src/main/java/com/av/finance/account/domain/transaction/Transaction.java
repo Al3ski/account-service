@@ -37,10 +37,6 @@ public class Transaction {
         this(builder.txId, builder.accountId, builder.txType, builder.amount, builder.details);
     }
 
-    public static Transaction create(UUID accountId, TransactionType type, BigDecimal amount, String details) {
-        return new Transaction(UUID.randomUUID(), accountId, type, amount, details);
-    }
-
     public static TransactionBuilder builder() {
         return new TransactionBuilder();
     }

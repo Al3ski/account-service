@@ -1,8 +1,8 @@
 package com.av.finance.account.app.service.impl;
 
+import com.av.finance.account.app.dto.TxDetails;
 import com.av.finance.account.app.rest.RestClient;
 import com.av.finance.account.app.service.TransactionService;
-import com.av.finance.account.domain.transaction.Transaction;
 import com.av.finance.account.domain.transaction.TransactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +22,10 @@ public class TransactionServiceImpl implements TransactionService {
     private final RestClient restClient;
 
     @Override
-    public UUID createTransaction(UUID accountId, TransactionType type,
+    public void createTransaction(UUID accountId, TransactionType type,
                                   BigDecimal initialCredit, String details) {
-        final Transaction transaction = Transaction.create(accountId, type, initialCredit, details);
-        final UUID transactionId = restClient.postRetryable(transactionUrl, new HttpEntity<>(transaction), UUID.class);
+        final TxDetails txDetails = new TxDetails(accountId, type, initialCredit, details);
+        restClient.postRetryable(transactionUrl, new HttpEntity<>(txDetails), String.class);
         log.info("Initial credit transaction successfully processed for account: {}", accountId);
-
-        return transactionId;
     }
 }

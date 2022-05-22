@@ -42,8 +42,8 @@ class CustomerAccountServiceTest {
 
         final Customer customer = prepareCustomer(customerId);
 
-        Mockito.when(transactionService.createTransaction(any(UUID.class), any(TransactionType.class),
-                any(BigDecimal.class), any(String.class))).thenReturn(any(UUID.class));
+        Mockito.doNothing().when(transactionService).createTransaction(any(UUID.class), any(TransactionType.class),
+                any(BigDecimal.class), any(String.class));
         Mockito.when(customerRepository.retrieve(customerId)).thenReturn(customer);
         Mockito.doNothing().when(customerAccountRepository).save(any(CustomerAccount.class));
 
