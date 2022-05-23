@@ -1,6 +1,7 @@
 package com.av.finance.account.app.service;
 
 import com.av.finance.account.app.rest.RestClient;
+import com.av.finance.account.common.RequestProperties;
 import com.av.finance.account.domain.transaction.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,17 +29,20 @@ class TransactionServiceTest {
     private TransactionService transactionService;
 
     @MockBean
+    private RequestProperties requestProperties;
+    @MockBean
     private RestClient restClient;
 
     @Test
     void createTransaction_success() {
-        Mockito.when(restClient.postRetryable(any(String.class), any(HttpEntity.class), any(ParameterizedTypeReference.class)))
+        Mockito.when(restClient.post(any(String.class), any(HttpEntity.class), any(ParameterizedTypeReference.class)))
                 .thenReturn(ResponseEntity.status(HttpStatus.CREATED).build());
+        Mockito.when(requestProperties.getTransactionUrl()).thenReturn("/test");
 
         transactionService.createTransaction(UUID.randomUUID(), TransactionType.INITIAL,
                 BigDecimal.ZERO, "");
 
         Mockito.verify(restClient, times(1))
-                .postRetryable(any(String.class), any(HttpEntity.class), any(ParameterizedTypeReference.class));
+                .post(any(String.class), any(HttpEntity.class), any(ParameterizedTypeReference.class));
     }
 }
