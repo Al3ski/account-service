@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 @Getter
@@ -25,5 +25,5 @@ public class AccountDetails {
     private final BigDecimal balance;
 
     @JsonProperty(value = "transactions")
-    private final List<TxDetails> accountTransactions;
+    private final Collection<TxDetails> accountTransactions;
 }

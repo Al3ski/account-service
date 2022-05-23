@@ -8,9 +8,5 @@ public interface RestClient {
 
     <T> ResponseEntity<T> get(String url, HttpEntity<?> httpEntity, ParameterizedTypeReference<T> responseType, Object... params);
 
-    <T> ResponseEntity<T> getRetryable(String url, HttpEntity<?> httpEntity, ParameterizedTypeReference<T> responseType, Object... params);
-
     <T> ResponseEntity<T> post(String url, HttpEntity<?> httpEntity, ParameterizedTypeReference<T> responseType, Object... params);
-
-    <T> ResponseEntity<T> postRetryable(String url, HttpEntity<?> httpEntity, ParameterizedTypeReference<T> responseType, Object... params);
 }
