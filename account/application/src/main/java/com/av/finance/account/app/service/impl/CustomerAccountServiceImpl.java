@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -45,11 +46,14 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         final List<Customer> customers = customerId == null ?
                 customerRepository.findAll() : Collections.singletonList(customerRepository.retrieve(customerId));
 
-        final Map<UUID, Customer> idToCustomer = customers.stream().collect(toMap(Customer::getCustomerId, Function.identity()));
+        final Map<UUID, Customer> idToCustomer = customers.stream()
+                .filter(Objects::nonNull)
+                .collect(toMap(Customer::getCustomerId, identity()));
         final List<CustomerAccount> accounts = customerAccountRepository.retrieveByCustomers(idToCustomer.keySet());
 
         final List<UUID> accountIds = toIds(accounts, CustomerAccount::getAccountId);
-        final Map<UUID, List<TxDetails>> accountTxs = transactionService.getTransactionsForAccounts(accountIds)
+        final Map<UUID, List<TxDetails>> accountTxs = accountIds.isEmpty() ? Collections.emptyMap()
+                : transactionService.getTransactionsForAccounts(accountIds)
                 .stream()
                 .collect(groupingBy(TxDetails::getAccountId));
 
