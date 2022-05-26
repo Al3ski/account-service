@@ -1,10 +1,7 @@
-package com.av.finance.account.infrastructure.persistance.repository;
+package com.av.finance.account.infrastructure.persistance.customer;
 
 import com.av.finance.account.domain.customer.Customer;
 import com.av.finance.account.domain.customer.repository.CustomerRepository;
-import com.av.finance.account.infrastructure.persistance.dao.CustomerDao;
-import com.av.finance.account.infrastructure.persistance.entity.CustomerEntity;
-import com.av.finance.account.infrastructure.persistance.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
