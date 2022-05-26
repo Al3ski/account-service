@@ -1,6 +1,6 @@
-package com.av.finance.account.infrastructure.rest;
+package com.av.finance.account.infrastructure.rest.impl;
 
-import com.av.finance.account.app.rest.RestClient;
+import com.av.finance.account.infrastructure.rest.RestClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
