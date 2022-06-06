@@ -30,7 +30,7 @@ public class CustomerAccountController {
     @GetMapping(path = "/details", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AccountDetails>> getAccountsDetails(@Valid
                                                                    @RequestParam(name = "customer_id", required = false)
-                                                                           UUID customerId) {
+                                                                   UUID customerId) {
         final List<AccountDetails> accountsDetails = customerAccountService.getCustomerAccountsDetails(customerId);
         return ResponseEntity.ok(accountsDetails);
     }

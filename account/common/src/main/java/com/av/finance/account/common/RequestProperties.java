@@ -15,7 +15,7 @@ public class RequestProperties {
 
     private long readTimeout;
 
-    private int recoverMax;
+    private int retryMax;
 
-    private long recoverDelay;
+    private long retryDelay;
 }

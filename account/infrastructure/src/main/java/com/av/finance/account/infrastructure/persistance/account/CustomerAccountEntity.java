@@ -1,4 +1,4 @@
-package com.av.finance.account.infrastructure.persistance.entity;
+package com.av.finance.account.infrastructure.persistance.account;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

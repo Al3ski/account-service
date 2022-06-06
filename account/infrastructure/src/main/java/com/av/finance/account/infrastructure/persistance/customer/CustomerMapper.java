@@ -1,7 +1,6 @@
-package com.av.finance.account.infrastructure.persistance.mapper;
+package com.av.finance.account.infrastructure.persistance.customer;
 
 import com.av.finance.account.domain.customer.Customer;
-import com.av.finance.account.infrastructure.persistance.entity.CustomerEntity;
 import org.mapstruct.Mapper;
 
 import java.util.List;

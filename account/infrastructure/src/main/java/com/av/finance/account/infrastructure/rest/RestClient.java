@@ -1,4 +1,4 @@
-package com.av.finance.account.app.rest;
+package com.av.finance.account.infrastructure.rest;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
