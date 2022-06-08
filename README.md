@@ -33,3 +33,6 @@ H2 DB:
 Run Application (from service root):
   - ./mvnw clean install
   - ./mvnw spring-boot:run -rf :app
+
+Linked services:
+ - https://github.com/Al3ski/transaction-service
