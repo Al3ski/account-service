@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class CustomerAccountControllerAdvice {
 
     @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorMessage handleBusinessExceptions(BusinessException exception) {
         log.error("Application BusinessException happened", exception);
         return ErrorMessageFactory.BUSINESS_ERROR.fromThrowable(exception);
