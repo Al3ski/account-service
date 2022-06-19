@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -40,9 +42,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("classpath:application-unit-test.properties")
 class CustomerAccountControllerAdviceTest {
 
-    @Autowired
+    @SpyBean
     private CustomerAccountControllerAdvice customerAccountControllerAdvice;
-    @Autowired
+
+    @MockBean
     private CustomerAccountService customerAccountService;
 
     @Autowired

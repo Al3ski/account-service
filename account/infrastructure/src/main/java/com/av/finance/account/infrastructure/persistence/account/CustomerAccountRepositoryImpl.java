@@ -1,4 +1,4 @@
-package com.av.finance.account.infrastructure.persistance.account;
+package com.av.finance.account.infrastructure.persistence.account;
 
 import com.av.finance.account.domain.account.CustomerAccount;
 import com.av.finance.account.domain.account.repository.CustomerAccountRepository;

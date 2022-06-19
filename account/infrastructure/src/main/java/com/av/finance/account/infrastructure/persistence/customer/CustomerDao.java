@@ -1,4 +1,4 @@
-package com.av.finance.account.infrastructure.persistance.customer;
+package com.av.finance.account.infrastructure.persistence.customer;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
