@@ -2,6 +2,7 @@ package com.av.finance.account.web.controller;
 
 import com.av.finance.account.app.service.CustomerAccountService;
 import com.av.finance.account.domain.account.CustomerAccountType;
+import com.av.finance.account.web.config.CustomerAccountWebTestConfiguration;
 import com.av.finance.account.web.dto.AccountInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -10,9 +11,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
+@ContextConfiguration(classes = CustomerAccountWebTestConfiguration.class)
 class CustomerAccountControllerTest {
 
     @Autowired
@@ -74,11 +75,5 @@ class CustomerAccountControllerTest {
                 .andReturn();
 
         Assertions.assertNotNull(result.getResponse().getContentAsString());
-    }
-
-
-    @Configuration
-    @ComponentScan(basePackages = {"com.av.finance.account.web"})
-    static class CustomerAccountControllerConfiguration {
     }
 }
