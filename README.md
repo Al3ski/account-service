@@ -6,9 +6,10 @@
 
 Implemented ideas:
   - onion architecture + ddd;
-  - basic centralized exceptions handling aproach;
-  - basic unit tests;
-  - retry mechanics + partial response returning.
+  - base centralized exceptions handling aproach;
+  - unit tests;
+  - retry mechanics + partial response returning;
+  - openAPI support.
 
 To Do:
   - increase tests coverage (e.i. integration, project structure);
