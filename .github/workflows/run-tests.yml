@@ -1,0 +1,21 @@
+name: Account-service CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout account-service project 
+        uses: actions/checkout@v3
+      
+      - name: Set-up jdk 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+          cache: maven
+          
+      - name: Run unit-tests
+        run: ./mvnw test
