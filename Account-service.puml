@@ -1,0 +1,229 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package common <<Rectangle>> {
+    class RequestProperties {
+        - baseUrl : String
+        - transactionUrl : String
+        - timeout : long
+        - readTimeout : long
+        - retryMax : int
+        - retryDelay : long
+    }
+    note top: Properties of incoming and outgoing service requests. \
+    \nSome of them are used in building "RestTemplate".\
+    \nAnother in builder outgoing requests URI, @Retryable configuration
+}
+
+package domain <<Rectangle>> {
+    package account <<Rectangle>> {
+        interface CustomerAccountRepository {
+            {abstract} retrieve(accountId : UUID)
+            {abstract} retrieveByCustomer(customerId : UUID)
+            {abstract} retrieveByCustomers(customerIds : Iterable<UUID>)
+            {abstract} save(customerAccount : CustomerAccount)
+        }
+        class CustomerAccount {
+            - accountId : UUID
+            - customerId : UUID
+            - accountType : CustomerAccountType
+            - balance : BigDecimal
+
+            + {static} open(...)
+            + {static} builder()
+        }
+        enum CustomerAccountType {
+            CURRENT
+        }
+    }
+    package customer <<Rectangle>> {
+        interface CustomerRepository {
+            {abstract} retrieve(customerId : UUID)
+            {abstract} findAll()
+            {abstract} save(customer : Customer)
+        }
+        class Customer {
+            - customerId : UUID
+            - name : String
+            - surname : String
+
+            + {static} builder()
+        }
+    }
+    package transaction <<Rectangle>> {
+        interface TransactionRepository {
+            {abstract} retrieve(txId : UUID)
+            {abstract} retrieveByAccount(accountId : UUID)
+            {abstract} save(transaction : Transaction)
+        }
+        class Transaction {
+            - txId : UUID
+            - accountId : UUID
+            - details : String
+            - txType : TransactionType
+            - amount : BigDecimal
+        }
+        enum TransactionType {
+            INITIAL,
+            DEPOSIT,
+            TRANSFER,
+            WITHDRAW
+        }
+    }
+}
+
+package application <<Rectangle>> {
+    interface CustomerAccountService {
+        {abstract} getCustomerAccountsDetails(customerId : UUID)
+        {abstract} openAccount(...)
+    }
+    interface TransactionExternalService {
+        {abstract} getTransactionsForAccounts(accountIds : List<UUID>)
+        {abstract} createTransaction(txDetails : TxDetails)
+    }
+    class CustomerAccountServiceImpl {
+        - transactionExternalService;
+        - customerRepository;
+        - customerAccountRepository;
+
+        + getCustomerAccountsDetails(customerId : UUID)
+        + openAccount(...)
+    }
+}
+
+package web <<Rectangle>> {
+    class CustomerAccountController {
+        - customerAccountService
+
+        + getAccountsDetails(customerId : UUID)
+        + openAccount(accountInput : AccountInput)
+    }
+
+    class AccountInput {
+        - customerId : UUID
+        - accountType : CustomerAccountType
+        - initialCredit : BigDecimal
+    }
+}
+
+package infrastructure <<Rectangle>> {
+    package "rest.client" <<Rectangle>> {
+        class RestClientImpl {
+            - restTemplate : RestTemplate
+
+            + get(...)
+            + post(...)
+        }
+    }
+    package "rest.transaction" <<Rectangle>> {
+        class TransactionExternalServiceImpl {
+            - restClient : RestClient
+            - requestProperties : RequestProperties
+            __
+            .. @Retryable ..
+            + getTransactionsForAccounts(accountIds : List<UUID>)
+            + createTransaction(txDetails : TxDetails)
+            .. @Recover ..
+            + getTransactionsForAccountsRecover(ex : Exception, accountIds : List<UUID>)
+        }
+    }
+    package "persistence.account" <<Rectangle>> {
+        interface CustomerAccountMapper {
+            {abstract} toCustomerAccount(entity : CustomerAccountEntity)
+            {abstract} toEntity(customerAccount : CustomerAccount)
+            {abstract} toCustomerAccounts(entities : List<CustomerAccountEntity>)
+            {abstract} toEntities(customerAccounts : List<CustomerAccount>)
+        }
+        interface CustomerAccountDao {
+            {abstract} findAllByCustomerId(customerId : UUID)
+            {abstract} findAllByCustomerIdIn(customerIds : Iterable<UUID>)
+        }
+        class CustomerAccountRepositoryImpl {
+            - customerAccountDao : CustomerAccountDao
+            - mapper : CustomerAccountMapper
+
+            + retrieve(accountId : UUID)
+            + retrieveByCustomer(customerId : UUID) : List<CustomerAccount>
+            + retrieveByCustomers(customerIds : Iterable<UUID>) : List<CustomerAccount>
+            + save(customerAccount : CustomerAccount)
+        }
+        class CustomerAccountEntity {
+            - accountId : UUID
+            - customerId : UUID
+            - accountType : String
+            - balance : String
+        }
+    }
+    package "persistence.customer" <<Rectangle>> {
+        interface CustomerMapper {
+            {abstract} toCustomer(entity : CustomerEntity)
+            {abstract} toCustomers(entities : Iterable<CustomerEntity>)
+            {abstract} toEntity(customer : Customer)
+            {abstract} toEntities(customers : Iterable<Customer>)
+        }
+        interface CustomerDao {
+        }
+        class CustomerRepositoryImpl {
+            - customerDao : CustomerDao
+            - mapper : CustomerMapper
+
+            + retrieve(customerId : UUID)
+            + findAll()
+            + save(customer : Customer)
+        }
+        class CustomerEntity {
+            - customerId : UUID
+            - name : String
+            - surname : String
+        }
+    }
+    package "spring.config" <<Rectangle>> {
+        class AccountApplicationConfiguration {
+        }
+        class OpenAPIConfiguration {
+        }
+    }
+    note bottom of spring.config: \
+            Spring context configuration as well as \
+            \nall important system beans and annotations
+}
+
+'web layer
+CustomerAccountController ---> "1  " CustomerAccountService
+CustomerAccountController .> AccountInput
+
+'application layer
+CustomerAccountServiceImpl .up.|> CustomerAccountService
+CustomerAccountServiceImpl -> "1" TransactionExternalService
+CustomerAccountServiceImpl ---> "1   " CustomerRepository
+CustomerAccountServiceImpl ---> "1 " CustomerAccountRepository
+
+'domain layer
+CustomerAccountRepository .left.> CustomerAccount
+CustomerAccount *-- CustomerAccountType
+CustomerRepository .> Customer
+TransactionRepository .left> Transaction
+Transaction *-- TransactionType
+
+'infrastructure layer
+    'persistence.account
+CustomerAccountRepositoryImpl ..up..|> CustomerAccountRepository
+CustomerAccountRepositoryImpl -> "1" CustomerAccountMapper
+CustomerAccountRepositoryImpl --> "1 " CustomerAccountDao
+CustomerAccountMapper ..> CustomerAccountEntity
+CustomerAccountMapper .up.> CustomerAccount
+    'persistence.customer
+CustomerRepositoryImpl ..up..|> CustomerRepository
+CustomerRepositoryImpl -> "1" CustomerMapper
+CustomerRepositoryImpl --> "1 " CustomerDao
+CustomerMapper ..> CustomerEntity
+CustomerMapper .up.> Customer
+    'rest.client
+RestClientImpl --() RestClient
+    'rest.transaction
+TransactionExternalServiceImpl ..|> TransactionExternalService
+TransactionExternalServiceImpl --> "1  " RestClientImpl
+TransactionExternalServiceImpl -up--> "1 " RequestProperties
+    'spring.config
+
+@enduml
