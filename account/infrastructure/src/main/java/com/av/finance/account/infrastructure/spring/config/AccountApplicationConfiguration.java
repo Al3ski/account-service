@@ -3,6 +3,7 @@ package com.av.finance.account.infrastructure.spring.config;
 import com.av.finance.account.common.RequestProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -15,6 +16,7 @@ import java.time.Duration;
 @EnableRetry(proxyTargetClass = true)
 @EnableJpaRepositories(basePackages = "com.av.finance.account")
 @PropertySource("classpath:request.properties")
+@ServletComponentScan(basePackages = "com.av.finance.account.web")
 @Configuration
 public class AccountApplicationConfiguration {
 
