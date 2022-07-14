@@ -4,7 +4,7 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 COPY account account
-RUN ./mvnw install -DskipTests
+RUN ./mvnw install
 RUN cd account/account-app && mkdir -p target/dependency  \
     && (cd target/dependency; jar -xf ../*.jar)
 
@@ -16,4 +16,4 @@ COPY --from=build ${DEPENDENCY}/META-INF ./META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes .
 ENV JAVA_OPTS=""
 EXPOSE 8091 9091
-ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
+ENTRYPOINT exec java $JAVA_OPTS -cp .:./lib/* com.av.finance.account.AccountServiceApplication
