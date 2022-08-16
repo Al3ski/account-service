@@ -1,0 +1,20 @@
+name: Account-service build and push to docker-hub workflow
+
+on: workflow_dispatch
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout account-service project
+        uses: actions/checkout@v3
+        
+      - name: Build Docker image and push to docker-hub
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          tags: aleskiii/account-service:latest
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
